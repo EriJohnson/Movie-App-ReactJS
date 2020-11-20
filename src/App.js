@@ -4,11 +4,14 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import ListaFilmes from './components/ListaFilmes'
 import ListaFilmesCabecalho from './components/ListaFilmesCabecalho'
 import CaixaBusca from './components/CaixaBusca'
+import AdicionaFavoritos from './components/AdicionaFavoritos'
+import RemoveFavoritos from './components/RemoveFavoritos'
 
 import './App.css'
 
 const App = () => {
   const [filmes, setFilmes] = useState([])
+  const [favoritos, setFavoritos] = useState([])
   const [busca, setBusca] = useState('')
 
   const getFilmesRequest = async busca => {
@@ -28,6 +31,20 @@ const App = () => {
     getFilmesRequest(busca)
   }, [busca])
 
+  const adicionarFilmeAosFavoritos = filme => {
+    const novaListaFavoritos = [...favoritos, filme]
+
+    setFavoritos(novaListaFavoritos)
+  }
+
+  const removerFilmeDoFavoritos = filme => {
+    const novaListaFavoritos = favoritos.filter(
+      favorito => favorito.imdbID !== filme.imdbID
+    )
+
+    setFavoritos(novaListaFavoritos)
+  }
+
   return (
     <h1>
       <div className='container-fluid filme-app'>
@@ -35,7 +52,25 @@ const App = () => {
           <ListaFilmesCabecalho titulo='Filmes' />
           <CaixaBusca busca={busca} setBusca={setBusca} />
         </div>
-        <div className='row'>{busca && <ListaFilmes filmes={filmes} />}</div>
+        <div className='row'>
+          {busca && (
+            <ListaFilmes
+              filmes={filmes}
+              handleFavoritosClick={adicionarFilmeAosFavoritos}
+              componente={AdicionaFavoritos}
+            />
+          )}
+        </div>
+        <div className='row d-flex align-items-center mt-4 mb-4'>
+          <ListaFilmesCabecalho titulo='Favoritos' />
+        </div>
+        <div className='row'>
+          <ListaFilmes
+            filmes={favoritos}
+            handleFavoritosClick={removerFilmeDoFavoritos}
+            componente={RemoveFavoritos}
+          />
+        </div>
       </div>
     </h1>
   )
