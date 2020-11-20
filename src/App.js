@@ -35,9 +35,7 @@ const App = () => {
           <ListaFilmesCabecalho titulo='Filmes' />
           <CaixaBusca busca={busca} setBusca={setBusca} />
         </div>
-        <div className='row'>
-          <ListaFilmes filmes={filmes} />
-        </div>
+        <div className='row'>{busca && <ListaFilmes filmes={filmes} />}</div>
       </div>
     </h1>
   )
