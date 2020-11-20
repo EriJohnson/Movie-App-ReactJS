@@ -31,10 +31,23 @@ const App = () => {
     getFilmesRequest(busca)
   }, [busca])
 
+  useEffect(() => {
+    const filmesFavoritos = JSON.parse(
+      localStorage.getItem('react-movie-app-favoritos')
+    )
+
+    setFavoritos(filmesFavoritos)
+  }, [])
+
+  const salvarParaLocalStorage = items => {
+    localStorage.setItem('react-movie-app-favoritos', JSON.stringify(items))
+  }
+
   const adicionarFilmeAosFavoritos = filme => {
     const novaListaFavoritos = [...favoritos, filme]
-
     setFavoritos(novaListaFavoritos)
+
+    salvarParaLocalStorage(novaListaFavoritos)
   }
 
   const removerFilmeDoFavoritos = filme => {
@@ -43,6 +56,7 @@ const App = () => {
     )
 
     setFavoritos(novaListaFavoritos)
+    salvarParaLocalStorage(novaListaFavoritos)
   }
 
   return (
@@ -65,11 +79,13 @@ const App = () => {
           <ListaFilmesCabecalho titulo='Favoritos' />
         </div>
         <div className='row'>
-          <ListaFilmes
-            filmes={favoritos}
-            handleFavoritosClick={removerFilmeDoFavoritos}
-            componente={RemoveFavoritos}
-          />
+          {favoritos && (
+            <ListaFilmes
+              filmes={favoritos}
+              handleFavoritosClick={removerFilmeDoFavoritos}
+              componente={RemoveFavoritos}
+            />
+          )}
         </div>
       </div>
     </h1>
